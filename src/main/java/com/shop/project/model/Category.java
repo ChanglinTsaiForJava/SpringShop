@@ -3,6 +3,7 @@ package com.shop.project.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Category {
     private Long categoryId;
 
     @NotBlank
+    @Size(min= 5, max=50, message = "at least 5 characters")
     @Column(name = "category_name")
     private String categoryName;
 

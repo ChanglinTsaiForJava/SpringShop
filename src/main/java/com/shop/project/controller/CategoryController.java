@@ -20,42 +20,31 @@ public class CategoryController {
     private CategoryService categoryService;
 
 
-    //Fetch all category
     @GetMapping("/public/categories")
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategory();
-        return ResponseEntity.status(HttpStatus.OK).body(categories);
+    //@RequestMapping(value = "/public/categories", method = RequestMethod.GET)
+    public ResponseEntity<List<Category>> getAllCategories(){
+        List<Category> categories = categoryService.getAllCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
+    //@RequestMapping(value = "/public/categories", method = RequestMethod.POST)
+    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category){
         categoryService.createCategory(category);
-//        鏈式語法是靜態 不能new
-        return ResponseEntity.status(HttpStatus.CREATED).body("Created Successful");
+        return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
     }
-    @DeleteMapping("/admin/category/{categoryId}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
-        try{
-            String status = categoryService.deleteCategory(categoryId);
-            //「把 status 這段文字當成回應內容，然後回傳 HTTP 狀態碼 200 OK。」
-            return ResponseEntity.status(HttpStatus.OK).body(status);
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-//            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+
+    @DeleteMapping("/admin/categories/{categoryId}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId){
+        String status = categoryService.deleteCategory(categoryId);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
 
 
-    }
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
-        try {
-            Category savedCategory = categoryService.updateCategory(category,categoryId);
-            return ResponseEntity.status(HttpStatus.OK).body("Category with id " + categoryId + " has been updated");
-        } catch (ResponseStatusException e){
-                return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-
-        }
+    public ResponseEntity<String> updateCategory(@Valid @RequestBody Category category,
+                                                 @PathVariable Long categoryId){
+        Category savedCategory = categoryService.updateCategory(category, categoryId);
+        return new ResponseEntity<>("Category with category id: " + categoryId, HttpStatus.OK);
     }
-
-
 }
