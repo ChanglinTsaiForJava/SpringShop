@@ -2,6 +2,7 @@ package com.shop.project.controller;
 
 
 import com.shop.project.model.Category;
+import com.shop.project.pyaload.CategoryResponse;
 import com.shop.project.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,12 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     //@RequestMapping(value = "/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<List<Category>> getAllCategories(){
-        List<Category> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories(){
+        CategoryResponse categoryResponse = categoryService.getAllCategories();
+        //ResponseEntity：是一個泛型類別，用來表示完整的 HTTP 回應，包括：
+        //回傳的資料（Body）
+        //HTTP 狀態碼（Status）
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
     @PostMapping("/public/categories")
