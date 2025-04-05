@@ -3,6 +3,7 @@ package com.shop.project.controller;
 
 import com.shop.project.model.Category;
 import com.shop.project.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@RequestBody Category category) {
+    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
         categoryService.createCategory(category);
 //        鏈式語法是靜態 不能new
         return ResponseEntity.status(HttpStatus.CREATED).body("Created Successful");
