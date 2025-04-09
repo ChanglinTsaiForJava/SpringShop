@@ -2,7 +2,6 @@ package com.shop.project.controller;
 
 
 import com.shop.project.config.AppConstant;
-import com.shop.project.model.Category;
 import com.shop.project.pyaload.CategoryDTO;
 import com.shop.project.pyaload.CategoryResponse;
 import com.shop.project.service.CategoryService;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 
 ////HTTP 元件	Spring 對應的寫法
