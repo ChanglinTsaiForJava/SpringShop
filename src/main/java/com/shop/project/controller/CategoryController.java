@@ -1,6 +1,7 @@
 package com.shop.project.controller;
 
 
+import com.shop.project.config.AppConstant;
 import com.shop.project.model.Category;
 import com.shop.project.pyaload.CategoryDTO;
 import com.shop.project.pyaload.CategoryResponse;
@@ -28,13 +29,17 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/echo")
-    public ResponseEntity<String> echoMessage(@RequestParam(name="message", required = false, defaultValue = "this is a default message") String message){
+    public ResponseEntity<String> echoMessage(
+            @RequestParam(name="message", required = false,
+                    defaultValue = "this is a default message") String message){
         return new ResponseEntity<>("ECHO MESSAGE "+ message , HttpStatus.OK);
     }
 
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getAllCategories(){
-        CategoryResponse categoryResponse = categoryService.getAllCategories();
+    public ResponseEntity<CategoryResponse> getAllCategories(
+            @RequestParam(name="pageNumber", defaultValue = AppConstant.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name="pageSize", defaultValue = AppConstant.PAGE_SIZE, required = false) Integer pageSize ){
+        CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber, pageSize);
         //ResponseEntity：是一個泛型類別，用來表示完整的 HTTP 回應，包括：
         //回傳的資料（Body）
         //HTTP 狀態碼（Status）
