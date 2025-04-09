@@ -36,8 +36,10 @@ public class CategoryController {
     @GetMapping("/public/categories")
     public ResponseEntity<CategoryResponse> getAllCategories(
             @RequestParam(name="pageNumber", defaultValue = AppConstant.PAGE_NUMBER, required = false) Integer pageNumber,
-            @RequestParam(name="pageSize", defaultValue = AppConstant.PAGE_SIZE, required = false) Integer pageSize ){
-        CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber, pageSize);
+            @RequestParam(name="pageSize", defaultValue = AppConstant.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name="sortBy", defaultValue = AppConstant.SORT_CATEGORIES_BY, required = false) String sortBy,
+            @RequestParam(name="sortOrder",defaultValue = AppConstant.SORT_DIR_BY, required = false)String sortOrder){
+        CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder);
         //ResponseEntity：是一個泛型類別，用來表示完整的 HTTP 回應，包括：
         //回傳的資料（Body）
         //HTTP 狀態碼（Status）
