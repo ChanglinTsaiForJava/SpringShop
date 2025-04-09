@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+
+//出入都會是DTO但是在運算過程把dto轉成一般類別 運算完再轉回dto顯示
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

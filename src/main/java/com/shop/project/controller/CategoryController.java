@@ -12,12 +12,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
+////HTTP 元件	Spring 對應的寫法
+////方法（POST/GET）	@PostMapping、@GetMapping
+////查詢參數 query	@RequestParam
+////路徑參數 path	@PathVariable
+////標頭 headers	@RequestHeader
+////主體 body（JSON）	@RequestBody
+////整包都要	RequestEntity<T>
+
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @GetMapping("/echo")
+    public ResponseEntity<String> echoMessage(@RequestParam(name="message", required = false, defaultValue = "this is a default message") String message){
+        return new ResponseEntity<>("ECHO MESSAGE "+ message , HttpStatus.OK);
+    }
 
     @GetMapping("/public/categories")
     public ResponseEntity<CategoryResponse> getAllCategories(){
@@ -29,6 +42,8 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
+    //@RequestBody 幾乎都是跟 POST method 一起用的，因為「只有 POST、PUT、PATCH」
+    //這類 HTTP 方法會有 request body（也就是內容資料）可以送過來。
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO){
         CategoryDTO savedCategoryDTO = categoryService.createCategory(categoryDTO);
         return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
