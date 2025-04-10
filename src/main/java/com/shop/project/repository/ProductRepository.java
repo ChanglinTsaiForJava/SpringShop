@@ -12,4 +12,6 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     //一如往常 repository 的語法偵測 findBy 物件內部的屬性 過濾出來後用過第一階段的物件的指定屬性排列
     List<Product> findByCategoryOrderByPriceAsc(Category category);
+    List<Product> findByProductNameLikeIgnoreCase(String keyword);
+
 }
