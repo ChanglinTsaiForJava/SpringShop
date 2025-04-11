@@ -1,0 +1,66 @@
+🔹 HTTP Request（用戶端 → 伺服器）
+當瀏覽器或程式向伺服器發送資料時，會組成一個 HTTP 請求，包含以下幾個部分：
+
+1. Request Line（請求行）
+範例：
+GET /index.html HTTP/1.1
+方法（Method）：GET、POST、PUT、DELETE...
+
+資源路徑（Path）：例如 /index.html
+
+協議版本：HTTP/1.1 或 HTTP/2 等
+
+2. Headers（標頭）
+提供關於請求的額外資訊，用來描述用戶端、格式、語言等等
+範例：
+Host: example.com
+User-Agent: Mozilla/5.0
+Accept: text/html
+Content-Type: application/json
+Authorization: Bearer xxxxx
+3. Body（主體 / 請求內容）（通常只有 POST、PUT 才會有）
+這部分會包含你要送出的資料，例如表單內容或 JSON。
+
+範例（JSON）：
+{
+  "username": "jack",
+  "password": "123456"
+}
+🔸 HTTP Response（伺服器 → 用戶端）
+伺服器接收到請求後，會回傳一個 Response，也包含幾個部分：
+
+1. Status Line（狀態行）
+範例：
+
+HTTP/1.1 200 OK
+版本：HTTP/1.1
+
+狀態碼：如 200（成功）、404（找不到）、500（伺服器錯誤）
+
+狀態描述：如 OK、Not Found、Internal Server Error
+
+2. Headers（標頭）
+說明回傳資料的型態、長度、是否快取等
+範例：
+
+Content-Type: text/html
+Content-Length: 3456
+Set-Cookie: sessionId=abc123
+3. Body（主體 / 回應內容）
+伺服器要送給用戶端的內容，例如 HTML、JSON、圖片等等
+
+範例（HTML）：
+
+<html>
+  <body>Hello World</body>
+</html>
+範例（JSON）：
+
+
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "name": "Jack"
+  }
+}
