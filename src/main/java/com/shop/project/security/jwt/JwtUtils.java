@@ -52,11 +52,11 @@ public class JwtUtils {
                 .build().parseSignedClaims(token)
                 .getPayload().getSubject();
     }
-
+/// /////////////////解碼器///////////
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
-
+/// ////////////////Decoder/////////
     public boolean validateJwtToken(String authToken) {
         try {
             System.out.println("Validate");
