@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "address")
+@Table(name = "addresses")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

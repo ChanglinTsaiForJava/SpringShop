@@ -10,25 +10,19 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
-@Table(name = "Category")
+@Entity(name = "categories")
 @Data
-//因為@data所以不需要gettersetter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
     private Long categoryId;
 
     @NotBlank
-    @Size(min= 5, max=50, message = "at least 5 characters")
-    @Column(name = "category_name")
+    @Size(min = 5, message = "Category name must contain atleast 5 characters")
     private String categoryName;
-
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> products;
-
 }
