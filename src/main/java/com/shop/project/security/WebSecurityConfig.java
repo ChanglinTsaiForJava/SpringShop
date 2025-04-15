@@ -102,13 +102,17 @@ public class WebSecurityConfig {
                 //開放匿名訪問(不需要帶 JWT Token 就可以訪問）測試用>>不然每次都要輸入token很煩）
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**").permitAll()// Swagger 的 API 文件
 //                                .requestMatchers("/api/admin/**").permitAll()
 //                                .requestMatchers("/api/public/**").permitAll()
-                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()// Swagger UI 本體
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
                                 //除了上述這些，其他請求都需要驗證（需要 JWT token）
+                                .requestMatchers(
+                                        "/swagger-resources/**",    // 靜態資源
+                                        "/webjars/**"
+                                ).permitAll()
                                 .anyRequest().authenticated()
                 );
         //透過 DaoAuthenticationProvider 自訂的登入邏輯（從資料庫查帳號 + 密碼加密比對）
