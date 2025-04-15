@@ -1,5 +1,19 @@
 package com.shop.project.controller;
 
+//User sends /api/auth/signin  ──>  AuthenticationManager.authenticate()
+//                                  └──> Is authentication successful?
+//                                           ├──> Yes ──> SecurityContextHolder.setAuthentication()
+//                                           │             └──> JwtUtils.generateTokenFromUsername()
+//                                           │                     └──> Get roles from authorities
+//                                           │                             └──> Create UserInfoResponse with token and roles
+//                                           │                                     └──> Return ResponseEntity.ok() with UserInfoResponse
+//                                           └──> No  ──> Return ResponseEntity with authentication error
+//User sends /api/auth/signup  ──> Check if username exists in userRepository
+//                                  └──> Check if email exists in userRepository
+//                                           └──> Create new User entity with encoded password
+//                                                    └──> Assign roles (default: ROLE_USER)
+//                                                           └──> Save user to userRepository
+//                                                                  └──> Return ResponseEntity.ok() with MessageResponse "User registered successfully!"
 import com.shop.project.model.AppRole;
 import com.shop.project.model.Role;
 import com.shop.project.model.User;

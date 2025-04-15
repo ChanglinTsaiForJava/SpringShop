@@ -1,0 +1,89 @@
+客戶端發送登入請求
+
+方法：/api/auth/signin
+
+描述：使用者發送 LoginRequest (包含 username 和 password)，請求登入。
+
+AuthController.authenticateUser() 方法處理登入請求
+
+說明：AuthController 內的 authenticateUser() 方法負責驗證用戶的身份。
+
+內部步驟：
+
+使用 authenticationManager.authenticate() 來驗證用戶名和密碼，調用 UsernamePasswordAuthenticationToken。
+
+若驗證失敗，回傳錯誤消息：Bad credentials。
+
+若驗證成功，將用戶信息存入 SecurityContextHolder。
+
+生成 JWT Token
+
+方法：JwtUtils.generateTokenFromUsername()
+
+描述：如果用戶名和密碼驗證成功，AuthController 會調用 jwtUtils.generateTokenFromUsername() 來生成 JWT。
+
+步驟：
+
+從 UserDetailsImpl 中提取用戶名，並根據 jwtSecret 生成簽名的 JWT Token。
+
+回傳成功響應
+
+方法：/api/auth/signin
+
+描述：返回一個包含用戶詳細信息（如 id、username、roles）和生成的 JWT Token 的響應。
+
+SignupRequest 註冊流程：
+客戶端發送註冊請求
+
+方法：/api/auth/signup
+
+描述：用戶提交註冊信息，包括 username、email 和 password。
+
+AuthController.registerUser() 方法處理註冊請求
+
+描述：AuthController 內的 registerUser() 方法負責註冊新用戶。
+
+內部步驟：
+
+驗證用戶名和電子郵件是否已經註冊。
+
+若已存在，回傳錯誤消息。
+
+否則，創建新用戶，並為其分配角色。
+
+角色分配
+
+說明：根據註冊時選擇的角色（如 admin、seller、user），分配對應的角色。
+
+角色的數據從 roleRepository 中查詢。
+
+保存新用戶到資料庫
+
+描述：將新用戶保存到資料庫中，並返回成功註冊消息。
+
+主要方法與功能：
+authenticateUser()：驗證用戶身份，產生 JWT。
+
+generateTokenFromUsername()：根據用戶名生成 JWT Token。
+
+loadUserByUsername()：從 UserRepository 加載用戶資料。
+
+registerUser()：處理註冊，檢查用戶名和郵件唯一性，並分配角色。
+
+
+
+User sends /api/auth/signin  ──>  AuthenticationManager.authenticate()
+                                  └──> Is authentication successful?
+                                           ├──> Yes ──> SecurityContextHolder.setAuthentication()
+                                           │             └──> JwtUtils.generateTokenFromUsername()
+                                           │                     └──> Get roles from authorities
+                                           │                             └──> Create UserInfoResponse with token and roles
+                                           │                                     └──> Return ResponseEntity.ok() with UserInfoResponse
+                                           └──> No  ──> Return ResponseEntity with authentication error
+
+User sends /api/auth/signup  ──> Check if username exists in userRepository
+                                  └──> Check if email exists in userRepository
+                                           └──> Create new User entity with encoded password
+                                                    └──> Assign roles (default: ROLE_USER)
+                                                           └──> Save user to userRepository
+                                                                  └──> Return ResponseEntity.ok() with MessageResponse "User registered successfully!"
