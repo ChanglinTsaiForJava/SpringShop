@@ -4,7 +4,7 @@ pipeline {
     tools {
         // 確保你的 Jenkins 上有安裝 Java 21 和 Maven 對應名稱
         jdk 'jdk-21'
-        maven 'maven-3.9'
+        maven 'maven-3.9.9'
     }
 
     environment {
