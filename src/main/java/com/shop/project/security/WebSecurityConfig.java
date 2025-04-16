@@ -91,29 +91,20 @@ public class WebSecurityConfig {
         //關閉 CSRF 防護（因為是 REST API）
         //因為 REST API不用表單，所以 CSRF(Cross-Site Request Forgery 保護沒有意義，反而會影響測試與使用。
         //在前後端分離的情況下，CSRF 通常會被關閉。
-        http.csrf(csrf -> csrf.disable())
-                //設定未授權處理方式（透過 AuthEntryPointJwt）
-                //如果使用者嘗試存取受保護資源，卻沒帶 token 或 token 錯誤，就會被導向這個 unauthorizedHandler。
-                //這個 handler 會回傳類似 HTTP 401 Unauthorized 的錯誤給前端>>看到401就來這裡開始找問題
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-                //JWT 是無狀態的，伺服器不需要紀錄誰已登入。
-                //所以這裡設定為 STATELESS，避免 Spring Security 建立或使用 HTTP session。
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //開放匿名訪問(不需要帶 JWT Token 就可以訪問）測試用>>不然每次都要輸入token很煩）
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**").permitAll()// Swagger 的 API 文件
-//                                .requestMatchers("/api/admin/**").permitAll()
-//                                .requestMatchers("/api/public/**").permitAll()
-                                .requestMatchers("/swagger-ui/**").permitAll()// Swagger UI 本體
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                //除了上述這些，其他請求都需要驗證（需要 JWT token）
-                                .requestMatchers(
-                                        "/swagger-resources/**",    // 靜態資源
-                                        "/webjars/**"
-                                ).permitAll()
-                                .anyRequest().authenticated()
+        http.csrf(csrf -> csrf.disable())  // 關閉 CSRF 保護
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))  // 未授權處理
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 無狀態配置
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/api/test/**",
+                                "/images/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"  // 開放匿名訪問的路徑
+                        ).permitAll()
+                        .anyRequest().authenticated()  // 其他請求需要 JWT token 驗證
                 );
         //透過 DaoAuthenticationProvider 自訂的登入邏輯（從資料庫查帳號 + 密碼加密比對）
         http.authenticationProvider(authenticationProvider());
