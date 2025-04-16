@@ -4,25 +4,25 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                echo 'buldingapp'
+                echo 'Building app...'
             }
         }
 
         stage('test') {
             steps {
-                // 清理 & 編譯 & 測試
-
+                echo 'Cleaning, compiling and testing the app...'
+                // 這裡可以加上清理、編譯和測試的命令
+                // 例如: sh 'mvn clean verify'
             }
         }
 
         stage('deploy') {
             steps {
-                // 打包成 WAR 檔案
-
+                echo 'Packaging the app into a WAR file...'
+                // 這裡可以加上打包 WAR 檔案的命令
+                // 例如: sh 'mvn clean package'
             }
         }
-
-        // 之後可以加部署到伺服器之類的 stage
     }
 
     post {
