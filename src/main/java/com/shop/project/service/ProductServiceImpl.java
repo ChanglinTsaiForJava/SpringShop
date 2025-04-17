@@ -2,10 +2,13 @@ package com.shop.project.service;
 
 import com.shop.project.exceptions.APIException;
 import com.shop.project.exceptions.ResourceNotFoundException;
+import com.shop.project.model.Cart;
 import com.shop.project.model.Category;
 import com.shop.project.model.Product;
+import com.shop.project.pyaload.CartDTO;
 import com.shop.project.pyaload.ProductDTO;
 import com.shop.project.pyaload.ProductResponse;
+import com.shop.project.repository.CartRepository;
 import com.shop.project.repository.CategoryRepository;
 import com.shop.project.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +24,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
     //requiredArgs
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private CartService cartService;
     private final CategoryRepository categoryRepository;
     @Autowired
     private ProductRepository productRepository;
@@ -139,11 +147,11 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
-        // Get the existing product from DB
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
         Product product = modelMapper.map(productDTO, Product.class);
-        // Update the product info with the one in request body
+
         productFromDb.setProductName(product.getProductName());
         productFromDb.setDescription(product.getDescription());
         productFromDb.setQuantity(product.getQuantity());
@@ -151,8 +159,23 @@ public class ProductServiceImpl implements ProductService {
         productFromDb.setPrice(product.getPrice());
         productFromDb.setSpecialPrice(product.getSpecialPrice());
 
-        // Save to database
         Product savedProduct = productRepository.save(productFromDb);
+
+        List<Cart> carts = cartRepository.findCartsByProductId(productId);
+
+        List<CartDTO> cartDTOs = carts.stream().map(cart -> {
+            CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+
+            List<ProductDTO> products = cart.getCartItems().stream()
+                    .map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
+
+            cartDTO.setProducts(products);
+
+            return cartDTO;
+
+        }).collect(Collectors.toList());
+
+        cartDTOs.forEach(cart -> cartService.updateProductInCarts(cart.getCartId(), productId));
 
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
@@ -161,6 +184,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product","productId", productId));
+
+        // DELETE
+        List<Cart> carts = cartRepository.findCartsByProductId(productId);
+        carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(), productId));
 
         productRepository.delete(product);
         return modelMapper.map(product, ProductDTO.class);
