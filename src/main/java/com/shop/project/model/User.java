@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.action.internal.OrphanRemovalAction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,6 +64,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
     private List<Address> addresses = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Cart cart;
+
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user",

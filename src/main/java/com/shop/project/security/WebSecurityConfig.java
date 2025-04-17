@@ -106,6 +106,9 @@ public class WebSecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()  // 其他請求需要 JWT token 驗證
                 );
+
+
+
         //透過 DaoAuthenticationProvider 自訂的登入邏輯（從資料庫查帳號 + 密碼加密比對）
         http.authenticationProvider(authenticationProvider());
 
